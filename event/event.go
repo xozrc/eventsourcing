@@ -15,22 +15,37 @@ type VersionedEvent interface {
 	Version() int64
 }
 
+
+type EventSourceder interface{
+	Guid() Guid
+	Version() int
+	SetVersion(int)
+	Events() []VersionedEvent
+	AddEvent(e VersionedEvent)
+}
+
+type EventSourced struct {
+	EventSourceder
+}
+
+func(es *EventSourced) LoadFrom() error{
+	for _,e := range es.Events(){
+		es.SetVersion(e.Version())
+	}
+	
+}
+
+func(es *EventSourced) Update(e VersionedEvent){
+	
+}
+
+
+
 type EventHandler interface {
 	ApplyEvent(ctx context.Context, e Event) error
 }
 
-
-type EventSourced interface {
-	Guid() Guid
-	Version() int
-	Events() []Event
-	LoadFrom(pes []Event) error
+type EventPublisher interface{
+	SendEvent(e Event) error
 }
 
-type EventStore interface {
-	Save(partitionKey string, es []Event) error
-}
-
-type EventStoreBusPublisher interface {
-	SendAsync(partitionKey string) error
-}
