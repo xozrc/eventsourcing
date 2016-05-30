@@ -7,8 +7,8 @@ import (
 )
 
 type EventSourcedRepository interface {
-	Find(id types.Guid) (*event.EventSourced, error)
-	Save(*event.EventSourced, string) error
+	Find(id types.Guid) (event.EventSourced, error)
+	Save(event.EventSourced, string) error
 }
 
 const (

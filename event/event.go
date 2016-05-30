@@ -2,50 +2,69 @@ package event
 
 import "golang.org/x/net/context"
 
-type Guid int64
-type EventType int64
-
+//Event ...
 type Event interface {
-	//from aggregate guid
 	SourceId() Guid
 }
 
+//VersionedEvent ...
 type VersionedEvent interface {
 	Event
 	Version() int64
 }
 
 
-type EventSourceder interface{
+type EventPublisher interface{
+	Events []Event
+}
+
+type EventSourced interface{
 	Guid() Guid
 	Version() int
-	SetVersion(int)
 	Events() []VersionedEvent
-	AddEvent(e VersionedEvent)
 }
 
-type EventSourced struct {
-	EventSourceder
+type EventSourcedBasic struct {
+	id Guid
+	version int64
+	pendingEvents []VersionedEvent
+
 }
 
-func(es *EventSourced) LoadFrom() error{
-	for _,e := range es.Events(){
-		es.SetVersion(e.Version())
-	}
-	
+func(esb *EventSourcedBasic) Id() Guid{
+	return esb.id
 }
 
-func(es *EventSourced) Update(e VersionedEvent){
-	
+func(esb *EventSourcedBasic) Version() int64{
+	return esb.version
+}
+
+func(esb *EventSourcedBasic) Events() []VersionedEvent{
+	return esb.pendingEvents
+}
+
+func(esb *EventSourcedBasic) LoadFrom(	pes []VersionedEvent) error {
+	return nil	
+}
+
+func(esb *EventSourcedBasic) Update(e VersionedEvent) error {
+  	e.SourceId = esl.Id;
+	e.Version = esl.version + 1;
+	esl.es.Handler
+	esb.version = e.Version;
+	esb.pendingEvents.Add(e);
+	return nil	
+}
+
+func NewEventSourcedBasic(id Guid,pendingEvents []VersionedEvent) *EventSourcedBasic{
+	esb := &EventSourcedBasic{}
+	esb.id = id
+	esb.pendingEvents = pendingEvents
+	return esb
 }
 
 
 
-type EventHandler interface {
-	ApplyEvent(ctx context.Context, e Event) error
-}
 
-type EventPublisher interface{
-	SendEvent(e Event) error
-}
+
 
