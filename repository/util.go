@@ -14,6 +14,7 @@ func GetPartitionKey(sourceType string, id types.Guid) string {
 
 func ConvertEventToData(e event.VersionedEvent) (ed *store.EventData, err error) {
 	ed := &store.EventData{}
+	ed.SourceId = fmt.Sprintf("%d", e.SourceId())
 	return
 }
 
