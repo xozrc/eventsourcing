@@ -87,3 +87,10 @@ func (esr *EventSourcedRepository) Save(es *event.EventSourced, correlationId st
 	//cache snapshot
 
 }
+
+func NewRepository(es store.EventStore, sourceType string) *EventSourcedRepository {
+	esr := &EventSourcedRepository{}
+	esr.es = es
+	esr.sourceType = sourceType
+	return esr
+}

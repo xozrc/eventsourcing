@@ -13,12 +13,6 @@ type VersionedEvent interface {
 	Version() int64
 }
 
-// type EventSourced interface {
-// 	Guid() Guid
-// 	Version() int
-// 	Events() []VersionedEvent
-// }
-
 type EventSourcedModel interface {
 	Id() Guid
 	Version() int64
