@@ -8,11 +8,6 @@ import (
 	"golang.org/x/net/context"
 )
 
-// type EventSourcedRepository interface {
-// 	Find(id types.Guid) (event.EventSourced, error)
-// 	Save(event.EventSourced, string) error
-// }
-
 const (
 	repository = "Repository"
 )
@@ -28,19 +23,19 @@ func RepositoryInContext(ctx context.Context) EventSourcedRepository {
 }
 
 type EventSourcedRepository struct {
-	st    string            //soruce type
-	es    *store.EventStore //event store
-	ca    *cache.Cache      //cache snapshot
-	mar   Marshaller        //event marshaller
-	unmar Unmarshaller      //event unmarshaller
-	 //event sender
+	st    string           //soruce type
+	es    store.EventStore //event store
+	ca    *cache.Cache     //cache snapshot
+	mar   Marshaller       //event marshaller
+	unmar Unmarshaller     //event unmarshaller
+	//event sender
 }
 
 func (esr *EventSourcedRepository) Find(id types.Guid, es *event.EventSourced) (err error) {
 
 	//read from cache
 
-	tv := 0
+	var tv int64 = 0
 	partitionKey := GetPartitionKey(esr.st, id)
 	teds, err := esr.es.Load(partitionKey, tv)
 
@@ -61,7 +56,7 @@ func (esr *EventSourcedRepository) Find(id types.Guid, es *event.EventSourced) (
 	}
 
 	//load events
-	err := es.LoadFrom(tes)
+	err = es.LoadFrom(tes)
 	if err != nil {
 		return
 	}

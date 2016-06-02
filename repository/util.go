@@ -13,7 +13,7 @@ func GetPartitionKey(sourceType string, id types.Guid) string {
 }
 
 func ConvertEventToData(e event.VersionedEvent) (ed *store.EventData, err error) {
-	ed := &store.EventData{}
+	ed = &store.EventData{}
 	ed.SourceId = fmt.Sprintf("%d", e.SourceId())
 	return
 }
@@ -27,9 +27,9 @@ func snapShotEventSourced(es *event.EventSourced) (bs []byte, err error) {
 }
 
 type Marshaller interface {
-	Marshal(e *event.VersionedEvent) (*EventData, error)
+	Marshal(e *event.VersionedEvent) (*store.EventData, error)
 }
 
 type Unmarshaller interface {
-	Unmarshal(data *EventData) (*event.VersionedEvent, error)
+	Unmarshal(data *store.EventData) (*event.VersionedEvent, error)
 }
