@@ -14,7 +14,7 @@ type VersionedEvent interface {
 }
 
 type EventSourcedModel interface {
-	Id() Guid
+	Id() types.Guid
 	Version() int64
 	ApplyEvent(ve VersionedEvent) error
 	Events() []VersionedEvent

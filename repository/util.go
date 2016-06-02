@@ -21,3 +21,15 @@ func ConvertEventToData(e event.VersionedEvent) (ed *store.EventData, err error)
 func ConvertDataToEvent(ed *store.EventData) (e event.VersionedEvent, err error) {
 	return
 }
+
+func snapShotEventSourced(es *event.EventSourced) (bs []byte, err error) {
+	return
+}
+
+type Marshaller interface {
+	Marshal(e *event.VersionedEvent) (*EventData, error)
+}
+
+type Unmarshaller interface {
+	Unmarshal(data *EventData) (*event.VersionedEvent, error)
+}

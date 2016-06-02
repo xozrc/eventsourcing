@@ -1,6 +1,7 @@
 package repository
 
 import (
+	"github.com/xozrc/eventsourcing/cache"
 	"github.com/xozrc/eventsourcing/event"
 	"github.com/xozrc/eventsourcing/store"
 	"github.com/xozrc/eventsourcing/types"
@@ -27,11 +28,16 @@ func RepositoryInContext(ctx context.Context) EventSourcedRepository {
 }
 
 type EventSourcedRepository struct {
-	st string            //soruce type
-	es *store.EventStore //event store
+	st    string            //soruce type
+	es    *store.EventStore //event store
+	ca    *cache.Cache      //cache snapshot
+	mar   Marshaller        //event marshaller
+	unmar Unmarshaller      //event unmarshaller
+	 //event sender
 }
 
 func (esr *EventSourcedRepository) Find(id types.Guid, es *event.EventSourced) (err error) {
+
 	//read from cache
 
 	tv := 0
@@ -45,7 +51,9 @@ func (esr *EventSourcedRepository) Find(id types.Guid, es *event.EventSourced) (
 	tes := make([]event.VersionedEvent, len(teds))
 	//convert to event
 	for _, ted := range teds {
-		te, err := ConvertDataToEvent(ted)
+
+		te, err := esr.unmar.Unmarshal(ted)
+
 		if err != nil {
 			//todo: do extra action
 			return err
@@ -68,7 +76,7 @@ func (esr *EventSourcedRepository) Save(es *event.EventSourced, correlationId st
 
 	eds := make([]*store.EventData, len(tes))
 	for _, e := range tes {
-		ed, err := ConvertEventToData(e)
+		ed, err := esr.mar.Marshal(e)
 		if err != nil {
 			return err
 		}
