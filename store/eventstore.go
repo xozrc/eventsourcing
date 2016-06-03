@@ -1,8 +1,8 @@
 package store
 
+//event data
 type EventData struct {
 	Id            int64 `gorm:"primary_key"`
-	RowKey        string
 	PartitionKey  string
 	SourceId      string
 	Version       int64

@@ -1,7 +1,9 @@
 package repository
 
 import (
+	"encoding/json"
 	"fmt"
+	"reflect"
 
 	"github.com/xozrc/eventsourcing/event"
 	"github.com/xozrc/eventsourcing/store"
@@ -26,10 +28,20 @@ func snapShotEventSourced(es *event.EventSourced) (bs []byte, err error) {
 	return
 }
 
-type Marshaller interface {
-	Marshal(e *event.VersionedEvent) (*store.EventData, error)
-}
+func toData(e event.VersionedEvent) (*store.EventData, error) {
+	ed := &store.EventData{}
+	ed.PartitionKey = ""
 
-type Unmarshaller interface {
-	Unmarshal(data *store.EventData) (*event.VersionedEvent, error)
+	//json endcode event
+	payload, err := json.Marshal(e)
+	if err != nil {
+		return nil, err
+	}
+
+	ed.Payload = string(payload)
+	ed.SourceId = fmt.Sprintf("%d", e.SourceId())
+	ed.SourceType = reflect.TypeOf(e).Name()
+	ed.Version = e.Version()
+
+	return ed, nil
 }
