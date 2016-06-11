@@ -17,9 +17,9 @@ var _ = fmt.Print
 const (
 	dialect  = "mysql"
 	user     = "root"
-	password = "root"
+	password = "zrc881002"
 	host     = "127.0.0.1:3306"
-	dbName   = "event_store_test"
+	dbName   = "event_store"
 	charset  = "utf8"
 )
 
@@ -55,10 +55,10 @@ func setup() {
 }
 
 func save() error {
-	ed := &store.EventData{}
+	ed := &store.EventEntity{}
 	version += 1
 	ed.Version = version
-	eds := make([]*store.EventData, 0)
+	eds := make([]*store.EventEntity, 0)
 	eds = append(eds, ed)
 	return st.Save(partitionKey, eds)
 }
