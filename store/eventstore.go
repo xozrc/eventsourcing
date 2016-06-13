@@ -1,23 +1,23 @@
 package store
 
-//event data
-type EventData struct {
-	Id int64 `gorm:"primary_key"`
+//event entity
+type EventEntity struct {
+	Id           int64 `gorm:"primary_key"`
+	PartitionKey string
+	SourceType   string
+	EventType    string
 
 	SourceId      string
+	CorrelationId string
 	Version       int64
 	Payload       string
-	CorrelationId string
-	EventType     string
-	PartitionKey  string
-	SourceType    string
 }
 
-func (ed *EventData) TableName() string {
-	return "t_event_data"
+func (ed *EventEntity) TableName() string {
+	return "t_event"
 }
 
 type EventStore interface {
-	Load(partitionKey string, version int64) ([]*EventData, error)
-	Save(partitionKey string, events []*EventData) error
+	Load(partitionKey string, version int64) ([]*EventEntity, error)
+	Save(partitionKey string, events []*EventEntity) error
 }

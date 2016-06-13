@@ -4,12 +4,11 @@ type Sender interface {
 	Send([]byte) error
 }
 
-type Handler interface {
-	Handle(msg []byte) error
+type Receiver interface {
+	Start(h MessageHandler) error
+	Stop() error
 }
 
-type Receiver interface {
-	Start(h Handler) error
-	Stop() error
-
+type MessageHandler interface {
+	Handle(msg []byte) error
 }

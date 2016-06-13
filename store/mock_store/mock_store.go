@@ -29,9 +29,9 @@ func (_m *MockEventStore) EXPECT() *_MockEventStoreRecorder {
 	return _m.recorder
 }
 
-func (_m *MockEventStore) Load(_param0 string, _param1 int64) ([]*store.EventData, error) {
+func (_m *MockEventStore) Load(_param0 string, _param1 int64) ([]*store.EventEntity, error) {
 	ret := _m.ctrl.Call(_m, "Load", _param0, _param1)
-	ret0, _ := ret[0].([]*store.EventData)
+	ret0, _ := ret[0].([]*store.EventEntity)
 	ret1, _ := ret[1].(error)
 	return ret0, ret1
 }
@@ -40,7 +40,7 @@ func (_mr *_MockEventStoreRecorder) Load(arg0, arg1 interface{}) *gomock.Call {
 	return _mr.mock.ctrl.RecordCall(_mr.mock, "Load", arg0, arg1)
 }
 
-func (_m *MockEventStore) Save(_param0 string, _param1 []*store.EventData) error {
+func (_m *MockEventStore) Save(_param0 string, _param1 []*store.EventEntity) error {
 	ret := _m.ctrl.Call(_m, "Save", _param0, _param1)
 	ret0, _ := ret[0].(error)
 	return ret0
